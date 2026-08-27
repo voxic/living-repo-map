@@ -1,20 +1,20 @@
 # Living repo map
 
-A Cursor skill that gives you a visual walk of an unfamiliar repo slice, instead of asking an agent to narrate it every time.
+A Cursor skill that walks an unfamiliar repo slice in the checkout you already have, instead of launching Cloud Agents or asking an agent to narrate it.
 
-Name a slice. It writes `MAP.md` plus a clickable `repo-map/` into the tree, then opens a PR. You open `repo-map/index.html` and step the real flows: where work enters, what it hits next, where state is owned, what must not break. Every node opens a real file.
+Name a slice. It writes `MAP.md` plus a clickable `repo-map/` into the working tree and stops. No branch, no commit, no PR. You open `repo-map/index.html` and step the real flows: where work enters, what it hits next, where state is owned, what must not break. Every node opens a real file.
 
-The walk stays in the repo, so it is still there tomorrow and whoever reads it next does not have to rediscover the tree.
+This is exploration, not a change to ship. Keep the files if you want them; otherwise they stay uncommitted.
 
 This is not a wiki and not a local CLI dump. It also does not hand out work: the skill explains the slice and stops. No job prompts, no agents launched on your behalf.
 
 ## Use it
 
-1. Open the target repo in Cursor, on the branch you want mapped.
-2. Run `SKILL.md` (or `.cursor/skills/living-repo-map/SKILL.md`) in whatever session you are already in.
+1. Open the target repo in Cursor, on the branch you want to look at.
+2. Run `SKILL.md` (or `.cursor/skills/living-repo-map/SKILL.md`) in that same session. Do not send it to a Cloud Agent.
 3. Name the slice, or let it infer the smallest honest one. If you are about to make a change, say so; it decides which flows are worth walking.
-4. It opens a PR with `MAP.md`, `repo-map/`, and a verification table for every path.
-5. Open `repo-map/index.html` (local file or GitHub Pages) and walk. Spot-check that one node opens a real file and one walk has at least three real hops.
+4. It writes `MAP.md` and `repo-map/` locally and reports a verification table. It does not open a PR.
+5. Open `repo-map/index.html` from the working tree (`file://` is enough) and walk. Spot-check that one node opens a real file and one walk has at least three real hops.
 
 ## What the walk shows
 
@@ -26,7 +26,7 @@ For the bounded slice only:
 - **Traps** — the invariant on the node it constrains, drawn from code or in-slice docs.
 - **Touches** — what moves when that flow changes: callers, tests, docs.
 
-## What lands in the repo
+## What lands in the working tree
 
 - `MAP.md` at repo root: the structured source, one block per walk, machine-readable
 - `repo-map/index.html` (hub) and one page per walk, vanilla HTML with no build
@@ -36,9 +36,9 @@ The skill does not compile the project and touches no product code beyond those 
 
 ## Rules
 
+- Stay in this checkout. Do not launch Cloud Agents.
 - Do not swallow the monorepo.
 - No invented paths, no invented edges, no invented incidents.
-- No launching other agents, and no job prompts written into the map.
+- No job prompts written into the map.
 - Do not create GitHub PATs.
-- Do not claim Cursor hosted the map (Pages or local HTML).
-- Nothing merges without a human.
+- Do not open a PR for the map unless the user asks to keep it.

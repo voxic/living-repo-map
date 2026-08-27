@@ -1,40 +1,40 @@
 ---
 name: Living repo map
 description: >-
-  Use this when a developer wants a visual walk of a large or unfamiliar repo
-  slice instead of asking an agent to narrate it. Bound a slice, then write
-  MAP.md plus a clickable repo-map/ that steps through the real flows: entry
-  point, each hop, where truth lives, what breaks.
+  Use this when a developer wants to explore an unfamiliar repo slice in the
+  checkout they already have. Bound a slice, then write MAP.md plus a
+  clickable repo-map/ locally. Do not launch Cloud Agents. Do not open a PR.
 ---
 # Living repo map
 
-A developer opens `repo-map/index.html` and walks the slice: where work enters, what it hits next, where state is owned, what must not break. Every node opens a real file.
+A local walk of this checkout. You open `repo-map/index.html` and follow the slice: where work enters, what it hits next, where state is owned, what must not break. Every node opens a real file.
 
-That walk is the product. It lives in the repo, so it is still there after the laptop closes and whoever reads it next does not have to rediscover the tree.
+That is the product. It is how you learn the tree without asking an agent to narrate it. Leave the files in the working tree. Do not treat this as a change to ship.
 
-It is not a wiki, not a local CLI dump, and not a list of jobs.
+It is not a wiki, not a job board, and not a reason to launch another agent.
 
 ## Done means
 
-A developer who has never opened this slice can follow two to five real flows end to end without asking an agent to explain the repo.
+Someone who has never opened this slice can follow two to five real flows end to end by opening the local HTML.
 
-Not done: a prettier `ls`, a package inventory, a sitemap of zone pages, or a list of prompts for someone else to run.
+Not done: a prettier `ls`, a package inventory, a sitemap of zone pages, a list of prompts, a Cloud Agent launch, or a pull request.
 
 ## Hard rules
 
+- Do this in the checkout you are already in. Do not clone a second copy of the target. Do not create GitHub PATs.
+- Do not launch Cloud Agents, background agents, or any other agent to walk the tree or to act on the map. Read the files yourself.
+- Do not create a branch, commit, or pull request for the map. Write `MAP.md` and `repo-map/` as working-tree files and stop. Commit only if the user explicitly asks to keep the map.
 - Do not swallow the monorepo. Bound a slice before you walk the tree.
 - Do not invent file paths. If a path does not exist in the checkout, delete the node.
 - Do not invent edges. A hop must be a real import, call, route registration, or queue publish you saw in the checkout.
 - Do not invent incidents. Traps come from the code or from docs inside the slice.
-- Work in the checkout you already have. Do not clone a second copy of the target, and do not create GitHub PATs.
-- Do not launch other agents to do this work, and do not write prompts for them into the map. The map explains the slice; it does not hand out jobs.
+- Do not write prompts, kickoff blocks, or Copy-prompt CTAs into the map. The map explains the slice; it does not hand out jobs.
 - Do not compile the whole project. Do not run the full testsuite.
 - Touch no product code. The map adds `MAP.md` and `repo-map/` and nothing else.
-- A human reviews the PR. Nothing merges until they say so.
 
 ## Inputs
 
-1. The repo and the branch you are on.
+1. This checkout. Stay on the branch you are already on.
 2. The slice to walk. If the user named one, use it. If not, infer the smallest honest slice from the ask (authentication, billing, the module they opened) and state that assumption.
 3. Optional: a change they are about to make. It decides which flows are worth walking. If there is none, walk the flows the entry points make obvious.
 
@@ -101,31 +101,30 @@ Vanilla HTML plus CSS plus SVG in `repo-map/`. No app build, no JavaScript beyon
 - `graph.json` — nodes and edges generated from `MAP.md`, so the pages and the machine-readable file cannot drift.
 - `styles.css`.
 
-Node paths link to the file. Use a GitHub blob URL on the map branch when the repo is hosted there, and show the plain path as text either way so the page still reads from `file://`.
+Node paths link to the file in this checkout (relative from `repo-map/`) and show the plain path as text so the page still reads from `file://`. A GitHub blob URL on the current branch is optional extra, not the primary link.
 
 Add zone or inventory pages only when they render the same walks. Do not introduce a second taxonomy.
 
-## Step 5. Verify, then PR
+## Step 5. Verify locally
 
-Before opening the PR, check every path in `MAP.md` and `graph.json` against the checkout. Print a verification table in the PR body. Fix or delete every `no`.
+Check every path in `MAP.md` and `graph.json` against the checkout. Print a verification table in the reply. Fix or delete every `no`.
 
 Then spot-check the walk itself, by opening the HTML:
 
 1. The hub lists the walks and the slice bound.
 2. One walk has at least three real hops in a sensible order.
-3. One node opens a real source file.
+3. One node opens a real source file in this checkout.
 4. Each `truth` names an owner, not a directory.
 5. Each `trap` is traceable to code or an in-slice doc.
 
-Fix what fails before you open the PR. A map with fictional nodes is worse than no map, because the next reader trusts it.
+Fix what fails before you stop. A map with fictional nodes is worse than no map, because the next reader trusts it.
 
-Open a PR titled for the map, with the verification table in the body. A human reviews it.
-
-If it needs to be clickable outside the IDE: GitHub Pages from the map branch `/repo-map`, or a zip of `repo-map/` opened as a local `index.html`. Do not claim Cursor hosted the site.
+Do not open a PR. Do not push. Point the user at `repo-map/index.html` in this working tree.
 
 ## Step 6. Report back
 
-- Map PR URL, branch, and hosted or local map path
+- Local path to `repo-map/index.html`
 - The slice bound, and the walks with their entry points
 - Verification: paths checked, nodes removed
 - Anything you could not resolve inside the slice, listed as peeked
+- That the map is uncommitted working-tree files, unless the user asked to keep it
