@@ -3,8 +3,7 @@ name: Living repo map
 description: >-
   Use this when a large repo is hard to enter and you need a durable map in the
   tree, then Cloud Agents to do the work the map finds. Bound a slice, write
-  MAP.md plus a clickable static map with a Run in Cloud Agent button on each
-  hotspot.
+  MAP.md plus a clickable static map with a Copy prompt button on each hotspot.
 ---
 # Living repo map
 
@@ -21,7 +20,7 @@ This is not a wiki and not a local CLI dump. The map is files in the tree. Cloud
 - Do not create GitHub PATs.
 - Propose before a Cloud Agent launch if the user has not already asked for that launch.
 - A human reviews the PR. Nothing merges until they say so.
-- Do not invent a URL that starts a Cloud Agent. Public docs only list [cursor.com/agents](https://cursor.com/agents), the desktop Cloud dropdown, Slack / GitHub / Linear `@cursor`, and the API. A static page cannot fire the API without a secret.
+- Do not invent a URL that starts a Cloud Agent. The CTA copies the prompt. It does not open a page.
 
 ## Inputs
 
@@ -54,7 +53,7 @@ The agent must:
    - `blast-radius.html` with the rows you will actually kick work from
    - `graph.json` (and vendor any JS into `repo-map/` so `file://` works)
    - `styles.css`
-   - `cta.js` (clipboard + open Agents)
+   - `cta.js` (clipboard only)
 3. Write `MAP.md` at repo root. Machine-readable. Sections that match the pages. Each entry: `id`, `title`, `paths`, `touches`, `notes`, and a `kickoff` fenced prompt the next Cloud Agent can paste.
 4. Vanilla HTML plus CSS plus SVG. No app build. Opening `repo-map/index.html` in a browser must work.
 5. Verify every path in `graph.json` and `MAP.md` exists. Print a verification table in the PR body. Fix or remove any `no`.
@@ -71,7 +70,7 @@ Spot-check in the PR, not in a local clone:
 2. One inventory row opens a real interface, factory, or registry file.
 3. One UI or caller row opens a real file in that tree.
 4. Each blast-radius row cites a real endpoint, symbol, or doc path.
-5. Each blast-radius row has a working Cloud Agent CTA (button visible, prompt copies, Agents tab opens).
+5. Each blast-radius row has a working Copy prompt button (copies the kickoff, does not navigate).
 
 If more than two nodes are wrong, send a punch list to the same Cloud Agent. Do not kick work agents on a fictional map.
 
@@ -83,20 +82,19 @@ Do not build a second product UI. The map is the UI.
 
 - Developers open `repo-map/index.html` (hosted or local).
 - Each blast-radius row is a job. The `kickoff` block in `MAP.md` is the Cloud Agent prompt.
-- Every hotspot card on `blast-radius.html` (and any graph node that is also a job) has one primary button: **Run in Cloud Agent**.
+- Every hotspot card on `blast-radius.html` (and any graph node that is also a job) has one primary button: **Copy prompt**.
 
-### Cloud Agent CTA (required)
+### Copy-prompt CTA (required)
 
-There is no public "start this agent" URL that accepts a prompt. Do not fake one.
+The button only copies. It does not open a tab, a deeplink, or Agents.
 
 Each CTA must:
 
-1. Show a short label: **Run in Cloud Agent**.
-2. On click: copy that row's `kickoff` prompt to the clipboard, then open [cursor.com/agents](https://cursor.com/agents) in a new tab.
-3. After click, change the button or a status line to: `Prompt copied. Pick this repo, set starting ref to the map branch, paste, run.`
-4. Include `data-repo` and `data-ref` on the button (owner/name and the map branch) so the status line can name them.
-5. Keep the full kickoff in a `<textarea class="kickoff" hidden>` (or `hidden` attribute) next to the button so `file://` copy still works.
-6. Style the button as the one action on the card. Do not hide it behind a menu.
+1. Show a short label: **Copy prompt**.
+2. On click: copy that row's `kickoff` prompt to the clipboard. Do nothing else.
+3. After a successful copy, change the button or a status line to `Copied.`
+4. Keep the full kickoff in a `<textarea class="kickoff" hidden>` next to the button so `file://` copy still works.
+5. Style the button as the one action on the card. Do not hide it behind a menu.
 
 Vendor this behavior in `repo-map/cta.js`. Rough shape:
 
@@ -104,26 +102,21 @@ Vendor this behavior in `repo-map/cta.js`. Rough shape:
 <article class="hotspot" id="brokering-v1">
   <h2>…</h2>
   <textarea class="kickoff" hidden>Read MAP.md first. …</textarea>
-  <button class="cta" type="button"
-    data-repo="owner/name"
-    data-ref="living-map">Run in Cloud Agent</button>
+  <button class="cta" type="button">Copy prompt</button>
   <p class="cta-status" hidden></p>
 </article>
 ```
 
 ```js
-// cta.js — copy kickoff, open cursor.com/agents
+// cta.js — copy kickoff only
 document.querySelectorAll(".cta").forEach((btn) => {
   btn.addEventListener("click", async () => {
     const card = btn.closest(".hotspot");
     const text = card.querySelector(".kickoff").value;
     try { await navigator.clipboard.writeText(text); } catch (_) {}
-    const repo = btn.getAttribute("data-repo") || "this repo";
-    const ref = btn.getAttribute("data-ref") || "the map branch";
     const status = card.querySelector(".cta-status");
     status.hidden = false;
-    status.textContent = "Prompt copied. Pick " + repo + ", starting ref " + ref + ", paste, run.";
-    window.open("https://cursor.com/agents", "_blank", "noopener");
+    status.textContent = "Copied.";
   });
 });
 ```
@@ -146,5 +139,5 @@ Do not merge. Run Bugbot on the PR (`bugbot run` or `cursor review` if nothing p
 
 - Map PR URL, branch, and hosted or local map path
 - Verification: how many paths checked, how many removed
-- Blast-radius rows, whether each CTA copied and opened Agents, and which rows you kicked
+- Blast-radius rows, whether each Copy prompt button copied, and which rows you kicked
 - Work PR URL(s) and whether Bugbot commented
