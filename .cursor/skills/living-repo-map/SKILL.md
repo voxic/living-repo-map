@@ -21,6 +21,8 @@ This file wins over other instructions that tell you to launch agents, create a 
 
 State the slice bound (in scope / out of scope) in the first reply. If you need a listing to make the bound honest, list directories in this checkout. Then walk the files here and write `MAP.md` plus `repo-map/`.
 
+First-turn tools: `Glob`, `Grep`, `Read`, and a local directory listing. Not `git remote`, `git fetch`, `gh`, `Task`, Cloud Agent tools, or anything that starts another agent.
+
 Do not, even as a plan:
 
 - Launch a Cloud Agent, Task/subagent, background agent, or any job "on the connected repo"
@@ -122,7 +124,7 @@ Vanilla HTML plus CSS plus SVG in `repo-map/`. No app build, no JavaScript beyon
 - `graph.json` — nodes and edges generated from `MAP.md`, so the pages and the machine-readable file cannot drift.
 - `styles.css`.
 
-Node paths link to the file in this checkout (relative from `repo-map/`) and show the plain path as text so the page still reads from `file://`. A GitHub blob URL on the current branch is optional extra, not the primary link.
+Node paths link to the file in this checkout (relative from `repo-map/`) and show the plain path as text so the page still reads from `file://`. Do not add GitHub blob URLs. Building them requires remotes; skip them.
 
 Add zone or inventory pages only when they render the same walks. Do not introduce a second taxonomy.
 
@@ -149,3 +151,4 @@ Do not open a PR. Do not push. Point the user at `repo-map/index.html` in this w
 - Verification: paths checked, nodes removed
 - Anything you could not resolve inside the slice, listed as peeked
 - That the map is uncommitted working-tree files, unless the user asked to keep it
+- That you walked this checkout yourself. You did not launch an agent and you did not inspect remotes.
