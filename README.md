@@ -13,8 +13,9 @@ This is not a wiki and not a local CLI dump. It also does not hand out work: the
 1. Open the target repo in Cursor, on the branch you want to look at.
 2. Run `SKILL.md` (or `.cursor/skills/living-repo-map/SKILL.md`) in that same session. Do not send it to a Cloud Agent.
 3. Name the slice, or let it infer the smallest honest one. If you are about to make a change, say so; it decides which flows are worth walking.
-4. It writes `MAP.md` and `repo-map/` locally and reports a verification table. It does not open a PR.
-5. Open `repo-map/index.html` from the working tree (`file://` is enough) and walk. Spot-check that one node opens a real file and one walk has at least three real hops.
+4. The first reply should bound the slice, then read this checkout. If it talks about remotes, the default branch, or launching a Cloud Agent, stop it and point it back at the skill.
+5. It writes `MAP.md` and `repo-map/` locally and reports a verification table. It does not open a PR.
+6. Open `repo-map/index.html` from the working tree (`file://` is enough) and walk. Spot-check that one node opens a real file and one walk has at least three real hops.
 
 ## What the walk shows
 
@@ -36,7 +37,7 @@ The skill does not compile the project and touches no product code beyond those 
 
 ## Rules
 
-- Stay in this checkout. Do not launch Cloud Agents.
+- Stay in this checkout. Do not launch Cloud Agents. Do not inspect remotes or the default branch to "honestly" bound the slice.
 - Do not swallow the monorepo.
 - No invented paths, no invented edges, no invented incidents.
 - No job prompts written into the map.
