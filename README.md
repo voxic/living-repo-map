@@ -12,8 +12,8 @@ This is not a wiki and not a local CLI dump. Cloud Agents clone the target repo.
 2. Open `SKILL.md` (or `.cursor/skills/living-repo-map/SKILL.md`) and run it in Agent or a Cloud Agent.
 3. Name the slice, or let it infer the smallest honest one. Optional: name the work you already care about.
 4. The map Cloud Agent opens a PR with `repo-map/` and `MAP.md`. Spot-check paths. Do not invent files.
-5. Open `repo-map/index.html` (GitHub Pages or a local file). Each blast-radius row has a **Run in Cloud Agent** button. It copies the `kickoff` prompt and opens [cursor.com/agents](https://cursor.com/agents). There is no public URL that starts the agent for you.
-6. In Agents: pick the repo, set starting ref to the map branch, paste, run. One hotspot per agent. Bugbot on the PR. Do not merge until a human says so.
+5. Open `repo-map/index.html` (GitHub Pages or a local file). Each blast-radius row has a **Copy prompt** button. It copies the `kickoff` prompt. It does not open a page.
+6. Paste the prompt into a Cloud Agent on the target repo, starting ref = the map branch. One hotspot per agent. Bugbot on the PR. Do not merge until a human says so.
 
 ## What lands in the target repo
 
